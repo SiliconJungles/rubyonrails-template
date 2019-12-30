@@ -3,13 +3,4 @@
 
 require_relative 'config/application'
 
-if Rails.env.development?
-  require 'quality/rake/task'
-  
-  Quality::Rake::Task.new do |task| 
-    task.skip_tools = ['linguist']
-  end 
-  task default: [:spec, :quality]
-end
-
 Rails.application.load_tasks
