@@ -20,6 +20,8 @@ And best practices:
 
 * [rails_best_practices](https://github.com/flyerhzm/rails_best_practices) (latest 1.19.5)
 
+* [rubocop](https://www.github.com/rubocop-hq/rubocop) (latest 0.78.0)
+
 To use the tools:
 
 [brakeman](https://github.com/presidentbeef/brakeman)
@@ -40,4 +42,10 @@ a code metric tool for rails projects.
 
 `bundle exec rails_best_practices`
 
-For further configurations, go check the repository.
+[rubocop](https://www.github.com/rubocop-hq/rubocop)
+
+A Ruby static code analyzer and formatter, based on the community Ruby style guide.
+
+`bundle exec rubocop`
+
+For further configurations, go check the respective repository.
