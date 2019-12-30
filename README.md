@@ -1,24 +1,43 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This repository has the following with default values: 
 
-Things you may want to cover:
+* Ruby 2.6.5
 
-* Ruby version
+* Rails 6.0.2.1
 
-* System dependencies
+Remember to create your master key: 
 
-* Configuration
+`bundle exec rails credentials:edit`
 
-* Database creation
+With security checks:
 
-* Database initialization
+* [brakeman](https://github.com/presidentbeef/brakeman) (latest 4.7.2)
 
-* How to run the test suite
+* [bundler-audit](https://github.com/rubysec/bundler-audit) (latest 0.6.1)
 
-* Services (job queues, cache servers, search engines, etc.)
+And best practices:
 
-* Deployment instructions
+* [rails_best_practices](https://github.com/flyerhzm/rails_best_practices) (latest 1.19.5)
 
-* ...
+To use the tools:
+
+[brakeman](https://github.com/presidentbeef/brakeman)
+
+A static analysis security vulnerability scanner for Ruby on Rails applications.
+
+`bundle exec brakeman`
+
+[bundler-audit](https://github.com/rubysec/bundler-audit)
+
+Patch-level verification for bundler.
+
+`bundle exec bundle-audit check --update`
+
+[rails_best_practices](https://github.com/flyerhzm/rails_best_practices)
+
+a code metric tool for rails projects.
+
+`bundle exec rails_best_practices`
+
+For further configurations, go check the repository.
