@@ -49,3 +49,9 @@ A Ruby static code analyzer and formatter, based on the community Ruby style gui
 `bundle exec rubocop`
 
 For further configurations, go check the respective repository.
+
+### Database
+
+The database is PostgreSQL 12.1 and you have to change the database details at `config/database.yml` if any changes required.
+
+
