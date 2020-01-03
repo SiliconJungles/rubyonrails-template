@@ -2,7 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-ruby/ for more details
 #
-version: 2
+version: 2.0
 
 references:
   default_docker_ruby_executor: &default_docker_ruby_executor
@@ -18,8 +18,8 @@ references:
     environment:
       POSTGRES_USER: developer
       POSTGRES_DB: developer_test_db
-  glue: &glue
-    image: owasp/glue
+  # glue: &glue
+  #   image: owasp/glue
 
 jobs:
   build:
@@ -61,7 +61,7 @@ jobs:
     docker:
       - *default_docker_ruby_executor
       - *postgres
-      - *glue
+      # - *glue
     # working_directory: ~/app
     steps:
       - checkout
