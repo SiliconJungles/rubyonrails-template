@@ -35,6 +35,8 @@ group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   # TDD
   gem 'rspec-rails'
+  # Rspec formatting
+  gem 'rspec_junit_formatter'
 end
 
 group :development do
