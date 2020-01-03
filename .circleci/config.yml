@@ -1,0 +1,107 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+version: 2
+
+references:
+  default_docker_ruby_executor: &default_docker_ruby_executor
+    image: circleci/ruby:latest-node-browsers
+    environment:
+      BUNDLE_JOBS: 4
+      BUNDLE_RETRY: 3
+      BUNDLE_PATH: vendor/bundle
+      PGHOST: 127.0.0.1
+      PGUSER: developer
+  postgres: &postgres
+    image: circleci/postgres:12.1-alpine
+    environment:
+      POSTGRES_USER: developer
+      POSTGRES_DB: developer_test_db
+  glue: &glue
+    image: owasp/glue
+
+jobs:
+  build:
+    docker:
+      - *default_docker_ruby_executor
+    # working_directory: ~/app
+    steps:
+      - checkout
+      - run:
+          name: Which bundler?
+          command: bundle -v
+      # bundle cache
+      - restore_cache:
+          keys:
+            - developer-dependencies-{{ checksum "Gemfile.lock" }}
+            - developer-dependencies-
+      - run:
+          name: Bundle Install
+          command: bundle check || bundle install
+      # Store bundle cache
+      - save_cache:
+          paths:
+            - vendor/bundle
+          key: developer-dependencies-{{ checksum "Gemfile.lock" }}
+      # Only necessary if app uses webpacker or yarn in some other way
+      - restore_cache:
+          keys:
+            - developer-yarn-{{ checksum "yarn.lock" }}
+            - developer-yarn-
+      - run:
+          name: Yarn Install
+          command: yarn install --cache-folder ~/.cache/yarn
+      # Store yarn / webpacker cache
+      - save_cache:
+          key: developer-yarn-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+  test:
+    docker:
+      - *default_docker_ruby_executor
+      - *postgres
+      - *glue
+    # working_directory: ~/app
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - developer-dependencies-{{ checksum "Gemfile.lock" }}
+            - developer-dependencies-
+      - run:
+          name: Bundle Install
+          command: bundle check || bundle install
+      - restore_cache:
+          keys:
+            - developer-yarn-{{ checksum "yarn.lock" }}
+            - developer-yarn-
+      # Database setup
+      - run:
+          name: Database setup
+          command: bundle exec rake db:create
+      # run security test!
+      # - bundle-audit
+      - run:
+          name: Bundle Audit
+          command: bundle exec bundle-audit check --update
+      # - brakeman
+      - run:
+          name: brakeman
+          command: bundle exec brakeman
+      # run tests!
+      - run:
+          name: run tests
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+            bundle exec rspec --format progress
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
