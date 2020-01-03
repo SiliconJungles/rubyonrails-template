@@ -27,3 +27,12 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Ignore node directories
+/node_modules
+yarn-error.log
+yarn-debug.log
+.yarn-integrity
+
+# Ignore OS directories
+**/.DS_Store
