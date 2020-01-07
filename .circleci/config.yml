@@ -65,6 +65,7 @@ jobs:
       - *dependency-check
     steps:
       - checkout
+      - setup_remote_docker
       - restore_cache:
           keys:
             - developer-dependencies-{{ checksum "Gemfile.lock" }}
