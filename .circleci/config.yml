@@ -20,6 +20,8 @@ references:
       POSTGRES_DB: developer_test_db
   # glue: &glue
   #   image: owasp/glue
+  dependency-check: &dependency-check
+    image: owasp/dependency-check:latest
 
 jobs:
   build:
@@ -57,6 +59,28 @@ jobs:
           key: developer-yarn-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+  dependency-check:
+    docker:
+      - *default_docker_ruby_executor
+      - *dependency-check
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - developer-dependencies-{{ checksum "Gemfile.lock" }}
+            - developer-dependencies-
+      - restore_cache:
+          keys:
+            - developer-yarn-{{ checksum "yarn.lock" }}
+            - developer-yarn-
+      - run:
+          name: owasp/dependency-check
+          command: |
+            docker run --rm owasp/dependency-check \
+              --enableExperimental \
+              --project rubyonrails-template \
+              --format HTML 
+              --scan .
   test:
     docker:
       - *default_docker_ruby_executor
