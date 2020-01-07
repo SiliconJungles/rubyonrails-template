@@ -18,14 +18,13 @@ references:
     environment:
       POSTGRES_USER: developer
       POSTGRES_DB: developer_test_db
-  # glue: &glue
-  #   image: owasp/glue
+  glue: &glue
+    image: owasp/glue:raw-latest
 
 jobs:
   build:
     docker:
       - *default_docker_ruby_executor
-    # working_directory: ~/app
     steps:
       - checkout
       - run:
@@ -57,12 +56,30 @@ jobs:
           key: developer-yarn-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+  glue:
+    docker:
+      - *glue
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - developer-dependencies-{{ checksum "Gemfile.lock" }}
+            - developer-dependencies-
+      - restore_cache:
+          keys:
+            - developer-yarn-{{ checksum "yarn.lock" }}
+            - developer-yarn-
+      # run glue test cases
+      - run:
+          name: glue
+          command: glue -l code,ruby -z 1 -f json -o tmp/test-results
+      - store_artifacts:
+          path: tmp/test-results
+          destination: test-results
   test:
     docker:
       - *default_docker_ruby_executor
       - *postgres
-      # - *glue
-    # working_directory: ~/app
     steps:
       - checkout
       - restore_cache:
@@ -80,26 +97,16 @@ jobs:
       - run:
           name: Database setup
           command: bundle exec rake db:create
-      # run security test!
-      # - bundle-audit
-      - run:
-          name: Bundle Audit
-          command: bundle exec bundle-audit check --update
-      # - brakeman
-      - run:
-          name: brakeman
-          command: bundle exec brakeman
-      # run tests!
       - run:
           name: run tests
           command: |
-            mkdir /tmp/test-results
+            mkdir tmp/test-results
             TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
-            bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec.xml --format progress
+            bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out tmp/test-results/rspec.xml --format progress
       - store_test_results:
-          path: /tmp/test-results
+          path: tmp/test-results
       - store_artifacts:
-          path: /tmp/test-results
+          path: tmp/test-results
           destination: test-results
 
 workflows:
@@ -107,6 +114,9 @@ workflows:
   build_and_test:
     jobs:
       - build
+      - glue:
+          requires:
+            - build
       - test:
           requires:
             - build
