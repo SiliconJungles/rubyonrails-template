@@ -131,6 +131,9 @@ workflows:
   build_and_test:
     jobs:
       - build
+      - dependency-check:
+          requires:
+            - build
       - test:
           requires:
             - build
