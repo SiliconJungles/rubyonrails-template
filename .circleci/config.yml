@@ -77,8 +77,8 @@ jobs:
       - run:
           name: owasp/dependency-check
           command: |
-            docker run owasp/dependency-check:latest \
-              --volume /tmp/dependency-check:/tmp/dependency-check \
+            docker run --volume /tmp/dependency-check:/tmp/dependency-check \
+              owasp/dependency-check:latest \ 
               --enableExperimental \
               --project rubyonrails-template \
               --format HTML 
