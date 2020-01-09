@@ -80,8 +80,8 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          command: mkdir -p /usr/share/dependency-check/data
+      #- run:
+      #    command: mkdir -p /usr/share/dependency-check/data
       - restore_cache:
           keys:
             - developer-dependencies-{{ checksum "Gemfile.lock" }}
