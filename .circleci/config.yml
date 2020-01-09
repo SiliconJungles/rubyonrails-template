@@ -62,7 +62,7 @@ jobs:
   dependency-check:
     docker:
       - *default_docker_ruby_executor
-      - *dependency-check
+      #- *dependency-check
     steps:
       - checkout
       - setup_remote_docker
@@ -77,11 +77,14 @@ jobs:
       - run:
           name: owasp/dependency-check
           command: |
-            mkdir /tmp/dependency-check
-            docker run --volume /tmp/dependency-check:/tmp/dependency-check \
-              owasp/dependency-check:latest --enableExperimental --project rubyonrails-template --scan . --out /tmp/dependency-check
+            mkdir -p /tmp/dependency-check/data
+            mkdir -p /tmp/dependency-check/report 
+            docker run --rm \
+              --volume /tmp/dependency-check/data:/usr/share/dependency-check/data:z \
+              --volume /tmp/dependency-check/report:/report \
+              owasp/dependency-check:latest --enableExperimental --project rubyonrails-template --scan . --out /report
       - store_artifacts:
-          path: /tmp/dependency-check
+          path: /tmp/dependency-check/report
           destination: dependency-check
   test:
     docker:
