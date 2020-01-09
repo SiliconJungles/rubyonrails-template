@@ -79,9 +79,7 @@ jobs:
           command: |
             mkdir -p /tmp/dependency-check/data
             mkdir -p /tmp/dependency-check/report 
-            docker run --rm \
-              --volume /tmp/dependency-check/data:/usr/share/dependency-check/data:z \
-              --volume /tmp/dependency-check/report:/report \
+            docker run --volume /tmp/dependency-check/data:/usr/share/dependency-check/data:z --volume /tmp/dependency-check/report:/report \
               owasp/dependency-check:latest --enableExperimental --project rubyonrails-template --scan . --out /report
       - store_artifacts:
           path: /tmp/dependency-check/report
