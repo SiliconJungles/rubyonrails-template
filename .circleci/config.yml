@@ -64,6 +64,7 @@ jobs:
       - *default_docker_ruby_executor
       - *dependency-check
     steps:
+      - setup_remote_docker
       - restore_cache:
           keys:
             - developer-dependency-check
