@@ -59,27 +59,21 @@ jobs:
           key: developer-yarn-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
-  dependency-check-build:
+  build-dependency-check:
     docker:
-      - *default_docker_ruby_executor
       - *dependency-check
     steps:
-      - setup_remote_docker
       - restore_cache:
           keys:
             - developer-dependency-check
       - run:
           name: owasp/dependency-check
           command: |
-            mkdir -p /tmp/dependency-check/data | mkdir -p /tmp/dependency-check/report
-            docker run \
-              --volume /tmp/dependency-check/data:/usr/share/dependency-check/data \
-              --volume /tmp/dependency-check/report:/report \
-              owasp/dependency-check:latest --enableExperimental --updateonly
+            /usr/share/dependency-check/bin/dependency-check --updateonly
       - save_cache:
           key: developer-dependency-check
           paths:
-            - /tmp/dependency-check/data
+            - /usr/share/dependency-check/data
   dependency-check:
     docker:
       - *default_docker_ruby_executor
@@ -157,11 +151,11 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - dependency-check-build
+      - build-dependency-check
       - dependency-check:
           requires:
             - build
-            - dependency-check-build
+            - build-dependency-check
       - test:
           requires:
             - build
