@@ -77,9 +77,8 @@ jobs:
       - run:
           name: owasp/dependency-check
           command: |
-            mkdir -p /tmp/dependency-check/data | mkdir -p /tmp/dependency-check/report 
-            docker run --volume /tmp/dependency-check/data:/usr/share/dependency-check/data --volume /tmp/dependency-check/report:/report \
-              owasp/dependency-check:latest --enableExperimental --project rubyonrails-template --scan . --out /report
+            mkdir -p /tmp/dependency-check/data |mkdir -p /tmp/dependency-check/report 
+            docker run owasp/dependency-check:latest --enableExperimental --project rubyonrails-template --out /report --scan .
       - store_artifacts:
           path: /tmp/dependency-check/report
           destination: dependency-check
@@ -95,13 +94,13 @@ jobs:
           keys:
             - developer-dependencies-{{ checksum "Gemfile.lock" }}
             - developer-dependencies-
-      - run:
-          name: Bundle Install
-          command: bundle check || bundle install
       - restore_cache:
           keys:
             - developer-yarn-{{ checksum "yarn.lock" }}
             - developer-yarn-
+      - run:
+          name: Bundle Install
+          command: bundle check || bundle install
       # Database setup
       - run:
           name: Database setup
