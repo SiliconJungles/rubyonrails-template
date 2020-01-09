@@ -43,9 +43,9 @@ jobs:
           command: bundle check || bundle install
       # Store bundle cache
       - save_cache:
+          key: developer-dependencies-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-          key: developer-dependencies-{{ checksum "Gemfile.lock" }}
       # Only necessary if app uses webpacker or yarn in some other way
       - restore_cache:
           keys:
@@ -59,6 +59,23 @@ jobs:
           key: developer-yarn-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+  dependency-check-build:
+    docker:
+      - *default_docker_ruby_executor
+      - *dependency-check
+    steps:
+      - restore_cache:
+          keys:
+            - developer-dependency-check
+      - run:
+          name: owasp/dependency-check
+          command: |
+            mkdir -p /tmp/dependency-check/data
+            docker run --volume /tmp/dependency-check/data:/usr/share/dependency-check/data --volume /tmp/dependency-check/report:/report owasp/dependency-check:latest --enableExperimental --update-only
+      - save_cache:
+          key: developer-dependency-check
+          paths:
+            - /tmp/dependency-check/data
   dependency-check:
     docker:
       - *default_docker_ruby_executor
@@ -74,11 +91,15 @@ jobs:
           keys:
             - developer-yarn-{{ checksum "yarn.lock" }}
             - developer-yarn-
+      - restore_cache:
+          keys:
+            - developer-dependency-check
       - run:
           name: owasp/dependency-check
           command: |
-            mkdir -p /tmp/dependency-check/data |mkdir -p /tmp/dependency-check/report 
-            docker run owasp/dependency-check:latest --enableExperimental --project rubyonrails-template --out /report --scan .
+            mkdir -p /tmp/dependency-check/data | mkdir -p /tmp/dependency-check/report 
+            docker run --volume /tmp/dependency-check/data:/usr/share/dependency-check/data --volume /tmp/dependency-check/report:/report \
+              owasp/dependency-check:latest --enableExperimental --project rubyonrails-template --out /report --scan .
       - store_artifacts:
           path: /tmp/dependency-check/report
           destination: dependency-check
@@ -132,9 +153,11 @@ workflows:
   build_and_test:
     jobs:
       - build
+      - dependency-check-build
       - dependency-check:
           requires:
             - build
+            - dependency-check-build
       - test:
           requires:
             - build
