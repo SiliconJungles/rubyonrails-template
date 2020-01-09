@@ -69,7 +69,7 @@ jobs:
       - run:
           name: owasp/dependency-check
           command: |
-            /usr/share/dependency-check/bin/dependency-check --updateonly
+            /usr/share/dependency-check/bin/dependency-check.sh --updateonly
       - save_cache:
           key: developer-dependency-check
           paths:
