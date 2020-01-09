@@ -27,7 +27,6 @@ jobs:
   build:
     docker:
       - *default_docker_ruby_executor
-    # working_directory: ~/app
     steps:
       - checkout
       - run:
@@ -97,7 +96,7 @@ jobs:
       - run:
           name: owasp/dependency-check
           command: |
-            docker run --volume /usr/share/dependency-check/data:/usr/share/dependency-check/data --volume /tmp/dependency-check:/report \
+            docker run --volume /tmp/dependency-check:/report \
               owasp/dependency-check:latest --enableExperimental --project rubyonrails-template --out /report --scan .
       - store_artifacts:
           path: /tmp/dependency-check/report
@@ -152,11 +151,11 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - build-dependency-check
+      #- build-dependency-check
       - dependency-check:
           requires:
             - build
-            - build-dependency-check
+            #- build-dependency-check
       - test:
           requires:
             - build
