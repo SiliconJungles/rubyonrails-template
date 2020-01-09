@@ -71,7 +71,7 @@ jobs:
       - run:
           name: owasp/dependency-check
           command: |
-            mkdir -p /tmp/dependency-check/data
+            mkdir -p /tmp/dependency-check/data | mkdir -p /tmp/dependency-check/report
             docker run --volume /tmp/dependency-check/data:/usr/share/dependency-check/data --volume /tmp/dependency-check/report:/report owasp/dependency-check:latest --enableExperimental --update-only
       - save_cache:
           key: developer-dependency-check
