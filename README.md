@@ -4,7 +4,7 @@ This repository has the following with default values:
 
 * Ruby 2.6.5
 
-* Rails 6.0.2.1
+* Rails 6.0.2.2
 
 Remember to create your master key: 
 
