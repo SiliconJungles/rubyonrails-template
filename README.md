@@ -2,9 +2,9 @@
 
 This repository has the following with default values: 
 
-* Ruby 2.6.5
+* Ruby 2.7.1
 
-* Rails 6.0.2.2
+* Rails 6.0.3.1
 
 Remember to create your master key: 
 
@@ -12,15 +12,15 @@ Remember to create your master key:
 
 With security checks:
 
-* [brakeman](https://github.com/presidentbeef/brakeman) (latest 4.7.2)
+* [brakeman](https://github.com/presidentbeef/brakeman) 
 
-* [bundler-audit](https://github.com/rubysec/bundler-audit) (latest 0.6.1)
+* [bundler-audit](https://github.com/rubysec/bundler-audit)
 
 And best practices:
 
-* [rails_best_practices](https://github.com/flyerhzm/rails_best_practices) (latest 1.19.5)
+* [rails_best_practices](https://github.com/flyerhzm/rails_best_practices)
 
-* [rubocop](https://www.github.com/rubocop-hq/rubocop) (latest 0.78.0)
+* [rubocop](https://www.github.com/rubocop-hq/rubocop)
 
 To use the tools:
 
