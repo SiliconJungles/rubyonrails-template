@@ -60,4 +60,4 @@ Now this comes with CircleCI configuration to build and test your code. Look at 
 
 ### Code Climate
 
-Now this comes with Code Climate configuration to build and test your code. Look at `.codeclimate.yml` and change if required.
+Now this comes with Code Climate configuration to build and test your code. Look at `.codeclimate.yml` and change if required. Add project repo to Code Climate.
