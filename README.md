@@ -57,3 +57,7 @@ The database is PostgreSQL 12.1 and you have to change the database details at `
 ### CircleCI
 
 Now this comes with CircleCI configuration to build and test your code. Look at `.circleci/config.yml` and change if required. It still can't run the tools off a docker image yet.
+
+### Code Climate
+
+Now this comes with CircleCI configuration to build and test your code. Look at `.codeclimate.yml` and change if required.
