@@ -1,18 +1,18 @@
 # README
 
-This repository has the following with default values: 
+This repository has the following with default values:
 
 * Ruby 2.7.1
 
-* Rails 6.0.3.1
+* Rails 6.0.3.4
 
-Remember to create your master key: 
+Remember to create your master key:
 
 `bundle exec rails credentials:edit`
 
 With security checks:
 
-* [brakeman](https://github.com/presidentbeef/brakeman) 
+* [brakeman](https://github.com/presidentbeef/brakeman)
 
 * [bundler-audit](https://github.com/rubysec/bundler-audit)
 
