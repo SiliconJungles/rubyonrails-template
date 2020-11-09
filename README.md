@@ -2,7 +2,7 @@
 
 This repository has the following with default values:
 
-* Ruby 2.7.1
+* Ruby 2.7.2
 
 * Rails 6.0.3.4
 
