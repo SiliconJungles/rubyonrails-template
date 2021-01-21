@@ -24,3 +24,10 @@ test:
 production:
   <<: *default
   database: developer_production_db
+
+production:
+  <<: *default
+  host: <%= ENV["DB_HOST"] %>
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  database: <%= ENV['DATABASE_NAME'] %>
